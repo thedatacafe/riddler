@@ -68,17 +68,13 @@ for (mySims in 1:simulation.rounds)   ##### Iterate over number of simulation ro
 	if(floor(mySims/100)==mySims/100){print(mySims)}
 }
 
-
-
 simulData = subset(simulData, x > -2)
 simResults = simulData[  order( simulData[,"sim.round"], -simulData[,"dart.throw"] ),]
-simResults = subset(simResults, !(duplicated( sim.round)))
+simResults = subset(simResults[,c(5,4)], !(duplicated( sim.round)))
+head(simResults)
 table(simulData$dart.throw)
 table(simResults$dart.throw)
 summary(simResults$dart.throw)
 
-
 write.table(simulData, "simulationResults.tsv", sep='\t', row.names=F, quote=F)
-
-
 
