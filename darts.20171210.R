@@ -1,5 +1,5 @@
 rm(list=ls())
-#### setwd('C:/Users/')    ##### Set your directory, and 
+#### setwd('C:/Users/')    ##### Set your directory, this is where the output file will be exported.
 
 #### Define number of simulation rounds
 simulation.rounds = 10000
@@ -10,7 +10,7 @@ exp.rows = 5
 isPointInCircle = function(x,y,r)  #### x and y are coordinates for the point, ### r = radius of cirlce, ### center assumed to be (0,0)
 {
 	d = sqrt(x^2+y^2)
-	incircle = ifelse(d>1,F,T)
+	incircle = ifelse(d>r,F,T)
 	return(incircle)
 }
 
@@ -21,7 +21,7 @@ disPoints = function(x1,y1,x2,y2) ##### x1 and y1 are coordinates for point 1, x
 	return(d)
 }
 
-### Create a database of random points in the circle - will have approximately 7.85*(the number of simulation rounds) 
+### Create a database of random points in the circle - will have approximately 3.93*(the number of simulation rounds) 
 tmpPoints = as.data.frame(matrix(-9,simulation.rounds*exp.rows,2))
 colnames(tmpPoints)= c('x','y')
 tmpPoints$x = runif(n = simulation.rounds*exp.rows, min = -1, max = 1)
@@ -31,7 +31,7 @@ inCirc  = isPointInCircle(tmpPoints$x,tmpPoints$y,r)
 simPoints = subset(tmpPoints, inCirc)
 dim(simPoints)
 
-###  simPoints is our database that will be updated through simulations
+###  simulData is our database that will be updated through simulations
 
 simulData = simPoints
 simulData$x = simulData$y = simulData$sim.round = simulData$dart.throw = simulData$min.dist = rep(-9, nrow(simulData))
@@ -40,14 +40,14 @@ myRow = 0
 for (mySims in 1:simulation.rounds)   ##### Iterate over number of simulation rounds
 {
 	myRow = myRow+1
-	dartCounter = 0				  ###### Reset dart throw counter
+	dartCounter = 0		      ###### Reset dart throw counter
 	minDist = 1                   ###### default value of minimum distance between any two pair of points
 	simulData$x[myRow]= simPoints$x[myRow]
 	simulData$y[myRow]= simPoints$y[myRow]
 	simulData$sim.round[myRow]=mySims
 	simulData$dart.throw[myRow]=dartCounter
 	simulData$min.dist[myRow]= minDist
-	while (!(minDist<1))          ###### If all pairwise points are more than 1 feet apart only then continue, next round of simulation. 
+	while (!(minDist<1))          ###### If all pairwise points are more than 1 feet apart only then continue, else next round of simulation. 
 	{
 		myRow = myRow+1
 		dartCounter = dartCounter+1
